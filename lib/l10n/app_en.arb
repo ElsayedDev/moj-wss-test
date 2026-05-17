@@ -1,0 +1,103 @@
+{
+  "@@locale": "en",
+  "appTitle": "Notification Center",
+  "@appTitle": {
+    "description": "Application title shown in the app bar and OS task switcher."
+  },
+  "createMessageTooltip": "Create message",
+  "@createMessageTooltip": {
+    "description": "Tooltip for the floating action button that opens the notification composer."
+  },
+  "filterMessagesTooltip": "Filter messages",
+  "@filterMessagesTooltip": {
+    "description": "Semantics label for the notification history filter menu."
+  },
+  "allFilterLabel": "All",
+  "@allFilterLabel": {
+    "description": "Filter option showing every notification channel."
+  },
+  "newNotificationTitle": "New Notification",
+  "@newNotificationTitle": {
+    "description": "Title shown in the compose sheet."
+  },
+  "cancelTooltip": "Cancel",
+  "@cancelTooltip": {
+    "description": "Tooltip for closing the compose sheet."
+  },
+  "channelLabel": "{channel} Channel",
+  "@channelLabel": {
+    "description": "Selected channel label in the compose sheet.",
+    "placeholders": {
+      "channel": {
+        "type": "String",
+        "example": "Email"
+      }
+    }
+  },
+  "recipientLabel": "Recipient",
+  "@recipientLabel": {
+    "description": "Recipient input label."
+  },
+  "messageContentLabel": "Message Content",
+  "@messageContentLabel": {
+    "description": "Message input label."
+  },
+  "messageHint": "Type a notification",
+  "@messageHint": {
+    "description": "Hint text for the message input."
+  },
+  "sendButtonLabel": "Send",
+  "@sendButtonLabel": {
+    "description": "Idle send button label."
+  },
+  "sendingButtonLabel": "Sending",
+  "@sendingButtonLabel": {
+    "description": "Loading send button label."
+  },
+  "notificationSent": "Notification sent.",
+  "@notificationSent": {
+    "description": "SnackBar shown after a successful notification send."
+  },
+  "emptyAllTitle": "No notifications yet",
+  "@emptyAllTitle": {
+    "description": "Empty state title for the all-messages filter."
+  },
+  "emptyChannelTitle": "No {channel} notifications yet",
+  "@emptyChannelTitle": {
+    "description": "Empty state title for a specific channel filter.",
+    "placeholders": {
+      "channel": {
+        "type": "String",
+        "example": "SMS"
+      }
+    }
+  },
+  "emptyAllBody": "Create a notification to start the message history.",
+  "@emptyAllBody": {
+    "description": "Empty state body for the all-messages filter."
+  },
+  "emptyChannelBody": "Create or show all messages to review other channels.",
+  "@emptyChannelBody": {
+    "description": "Empty state body for a specific channel filter."
+  },
+  "recipientPrefix": "To {recipient}",
+  "@recipientPrefix": {
+    "description": "Recipient label rendered on a notification history item.",
+    "placeholders": {
+      "recipient": {
+        "type": "String",
+        "example": "clerk@justice.gov"
+      }
+    }
+  },
+  "providerIconLabel": "{channel} notification",
+  "@providerIconLabel": {
+    "description": "Semantics label for a provider icon on a history item.",
+    "placeholders": {
+      "channel": {
+        "type": "String",
+        "example": "Email"
+      }
+    }
+  }
+}
