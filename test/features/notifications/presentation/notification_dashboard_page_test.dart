@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class _FixedClock implements Clock {
 Future<void> _pumpDashboard(
   WidgetTester tester, {
   Size surfaceSize = const Size(390, 844),
+  TargetPlatform platform = TargetPlatform.android,
 }) async {
   await tester.binding.setSurfaceSize(surfaceSize);
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -82,8 +85,8 @@ Future<void> _pumpDashboard(
           splitScreenMode: true,
           builder: (context, child) {
             return MaterialApp(
-              theme: AppTheme.light(),
-              darkTheme: AppTheme.dark(),
+              theme: AppTheme.light().copyWith(platform: platform),
+              darkTheme: AppTheme.dark().copyWith(platform: platform),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const NotificationDashboardPage(),
@@ -174,6 +177,21 @@ void main() {
   });
 
   group('NotificationDashboardPage', () {
+    test('notification widgets delegate platform selection to adaptive controls', () {
+      const widgetPaths = [
+        'lib/features/notifications/presentation/widgets/notification_compose_channel_menu.dart',
+        'lib/features/notifications/presentation/widgets/notification_compose_floating_action.dart',
+        'lib/features/notifications/presentation/widgets/notification_filter_menu.dart',
+      ];
+
+      for (final widgetPath in widgetPaths) {
+        final source = File(widgetPath).readAsStringSync();
+
+        expect(source, isNot(contains('Theme.of(context).platform')));
+        expect(source, isNot(contains('TargetPlatform.android')));
+      }
+    });
+
     testWidgets('renders one material screen without bottom navigation', (
       tester,
     ) async {
@@ -187,7 +205,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsOneWidget);
       expect(find.byKey(const ValueKey('animated-route-shell')), findsNothing);
       expect(find.byKey(const ValueKey('compose-action')), findsOneWidget);
-      expect(find.byType(CNPopupMenuButton), findsOneWidget);
+      expect(find.byType(MenuAnchor), findsOneWidget);
+      expect(find.byType(CNPopupMenuButton), findsNothing);
       expect(
         find.byKey(const ValueKey('conversation-transcript')),
         findsOneWidget,
@@ -222,11 +241,31 @@ void main() {
       expect(find.text('Push'), findsOneWidget);
     });
 
-    testWidgets('uses Cupertino-native popup menu controls', (tester) async {
+    testWidgets('uses Material 3 menu controls on Android', (tester) async {
       await _pumpDashboard(tester);
 
       expect(find.byKey(const ValueKey('message-filter-menu')), findsOneWidget);
+      expect(find.byType(MenuAnchor), findsOneWidget);
+      expect(find.byType(CNPopupMenuButton), findsNothing);
+
+      await _openComposer(tester);
+
+      expect(
+        find.byKey(const ValueKey('compose-channel-menu')),
+        findsOneWidget,
+      );
+      expect(find.byType(MenuAnchor), findsNWidgets(2));
+      expect(find.byType(CNPopupMenuButton), findsNothing);
+    });
+
+    testWidgets('keeps Cupertino-native popup menu controls outside Android', (
+      tester,
+    ) async {
+      await _pumpDashboard(tester, platform: TargetPlatform.iOS);
+
+      expect(find.byKey(const ValueKey('message-filter-menu')), findsOneWidget);
       expect(find.byType(CNPopupMenuButton), findsOneWidget);
+      expect(find.byType(MenuAnchor), findsNothing);
 
       await _openComposer(tester);
 
@@ -235,6 +274,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.byType(CNPopupMenuButton), findsNWidgets(2));
+      expect(find.byType(MenuAnchor), findsNothing);
     });
 
     testWidgets(
