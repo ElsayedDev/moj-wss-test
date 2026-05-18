@@ -14,7 +14,7 @@ extension points for adding new notification channels.
 <img src="docs/demo/android-demo.gif" width="300" />
 
 ### iOS Demo
-<video src="docs/demo/ios-demo.mp4" width="300" controls></video>
+<video src="docs/demo/ios-demo.gif" width="300" controls></video>
 
 ## Quick Start
 
