@@ -1,8 +1,8 @@
-import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moj_wss_notification/features/notifications/domain/services/notification_channel.dart';
 import 'package:moj_wss_notification/features/notifications/presentation/channel_presentation/notification_channel_presentation.dart';
+import 'package:moj_wss_notification/features/notifications/presentation/widgets/notification_adaptive_controls.dart';
 import 'package:moj_wss_notification/l10n/app_localizations_extension.dart';
 
 class NotificationFilterMenu extends StatelessWidget {
@@ -21,37 +21,40 @@ class NotificationFilterMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final presentationFactory = context
         .read<NotificationChannelPresentationFactory>();
-    final values = [allValue, for (final channel in channels) channel.id];
+    final controls = NotificationAdaptiveControls.resolve(context);
 
-    return Semantics(
-      label: context.l10n.filterMessagesTooltip,
-      button: true,
-      child: CNPopupMenuButton.icon(
+    return controls.menu<String>(
+      context: context,
+      trigger: NotificationAdaptiveMenuTrigger(
         key: const ValueKey('message-filter-menu'),
-        buttonIcon: CNSymbol('line.3.horizontal.decrease.circle', size: 20),
-        buttonStyle: CNButtonStyle.glass,
-        tint: colorScheme.primary,
-        items: [
-          CNPopupMenuItem(
-            label: context.l10n.allFilterLabel,
-            icon: const CNSymbol('tray.full', size: 18),
-          ),
-          for (final channel in channels)
-            CNPopupMenuItem(
-              label: channel.label,
-              icon: CNSymbol(
-                presentationFactory
-                    .resolve(channel)
-                    .sfSymbolName(selected: channel.id == selectedValue),
-                size: 18,
-              ),
-            ),
-        ],
-        onSelected: (index) => onSelected(values[index]),
+        tooltip: context.l10n.filterMessagesTooltip,
+        materialIcon: Icons.filter_list_rounded,
+        cupertinoSymbol: 'line.3.horizontal.decrease.circle',
       ),
+      options: [
+        NotificationAdaptiveMenuOption<String>(
+          value: allValue,
+          label: context.l10n.allFilterLabel,
+          materialIcon: Icons.all_inbox_rounded,
+          cupertinoSymbol: 'tray.full',
+          selected: selectedValue == allValue,
+        ),
+        for (final channel in channels)
+          NotificationAdaptiveMenuOption<String>(
+            value: channel.id,
+            label: channel.label,
+            materialIcon: presentationFactory
+                .resolve(channel)
+                .materialIcon(selected: channel.id == selectedValue),
+            cupertinoSymbol: presentationFactory
+                .resolve(channel)
+                .sfSymbolName(selected: channel.id == selectedValue),
+            selected: channel.id == selectedValue,
+          ),
+      ],
+      onSelected: onSelected,
     );
   }
 }

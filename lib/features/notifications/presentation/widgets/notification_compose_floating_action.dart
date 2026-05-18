@@ -1,5 +1,5 @@
-import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
+import 'package:moj_wss_notification/features/notifications/presentation/widgets/notification_adaptive_controls.dart';
 
 class NotificationComposeFloatingAction extends StatelessWidget {
   const NotificationComposeFloatingAction({
@@ -15,30 +15,11 @@ class NotificationComposeFloatingAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      return FloatingActionButton(
-        key: buttonKey,
-        tooltip: tooltip,
-        heroTag: 'compose-notification',
-        onPressed: onPressed,
-        child: const Icon(Icons.edit_rounded),
-      );
-    }
-
-    return Tooltip(
-      message: tooltip,
-      child: Semantics(
-        label: tooltip,
-        button: true,
-        child: CNButton.icon(
-          key: buttonKey,
-          icon: const CNSymbol('square.and.pencil', size: 20),
-          tint: colorScheme.primary,
-          onPressed: onPressed,
-        ),
-      ),
+    return NotificationAdaptiveControls.resolve(context).floatingAction(
+      context: context,
+      buttonKey: buttonKey,
+      tooltip: tooltip,
+      onPressed: onPressed,
     );
   }
 }
